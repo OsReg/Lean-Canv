@@ -1,0 +1,121 @@
+let isRunning = false; // To control the detection state
+let keypointPositions = []; // Array to store the keypoint positions
+let animationFrameId;
+
+async function setupWebcam() {
+    const webcamElement = document.getElementById('webcam');
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    webcamElement.srcObject = stream;
+
+    return new Promise((resolve) => {
+        webcamElement.onloadedmetadata = () => {
+            resolve(webcamElement);
+        };
+    });
+}
+
+async function main() {
+    let net;
+    try {
+        net = await posenet.load(); // Load Posenet-model
+    } catch (error) {
+        console.error("Posenet model could not load:", error);
+        return;
+    }
+
+    const webcam = await setupWebcam();
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = webcam.videoWidth;
+    canvas.height = webcam.videoHeight;
+
+    async function detectPose() {
+        if (!isRunning) return;
+
+        let pose;
+        try {
+            pose = await net.estimateSinglePose(webcam, {
+                flipHorizontal: true
+            });
+        } catch (error) {
+            console.error("Error estimating pose:", error);
+            requestAnimationFrame(detectPose);
+            return;
+        }
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (pose.score >= 0.5) {
+            drawKeypoints(pose.keypoints, 0.8, ctx);
+            drawSkeleton(pose.keypoints, 0.8, ctx);
+
+            // Log Left wrist position and save in a array
+            const leftWrist = pose.keypoints.find(k => k.part === 'leftWrist');
+            if (leftWrist && leftWrist.score >= 0.8) {
+                console.log(`Left Wrist position: x=${leftWrist.position.x}, y=${leftWrist.position.y}`);
+
+                // Save positions in a array
+                keypointPositions.push({ time: Date.now(), x: leftWrist.position.x, y: leftWrist.position.y });
+            }
+        }
+
+        animationFrameId = requestAnimationFrame(detectPose);
+    }
+
+    // Start pose-detection
+    document.getElementById('startButton').addEventListener('click', () => {
+        isRunning = true;
+        detectPose();
+    });
+
+    // Stop pose-detection
+    document.getElementById('stopButton').addEventListener('click', () => {
+        isRunning = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        cancelAnimationFrame(animationFrameId);
+    });
+
+    // Save keypoint position to a CSV-fil
+    document.getElementById('saveButton').addEventListener('click', () => {
+        const csvContent = "data:text/csv;charset=utf-8,time,x,y\n" +
+            keypointPositions.map(e => `${e.time},${e.x},${e.y}`).join("\n");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+
+        // Change LeftShoulder to keypoint name, to manage files more easily
+        link.setAttribute("download", "keypoint_positions_LeftShoulder.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+}
+
+function drawKeypoints(keypoints, minConfidence, ctx) {
+    keypoints.forEach((keypoint) => {
+        if (keypoint.score > minConfidence) {
+            const { y, x } = keypoint.position;
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+        }
+    });
+}
+
+function drawSkeleton(keypoints, minConfidence, ctx) {
+    const adjacentKeyPoints = posenet.getAdjacentKeyPoints(keypoints, minConfidence);
+    adjacentKeyPoints.forEach((keypoints) => {
+        const [from, to] = keypoints;
+        ctx.beginPath();
+        ctx.moveTo(from.position.x, from.position.y);
+        ctx.lineTo(to.position.x, to.position.y);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
+    });
+}
+
+main();

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PoseNet Video Tracking</title>
+  <style>
+    #container {
+      position: relative;
+      width: 640px;
+      height: 480px;
+    }
+    #video {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
+</head>
+<body>
+  <div id="container">
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    async function setupCamera() {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true
+      });
+      video.srcObject = stream;
+      return new Promise((resolve) => {
+        video.onloadedmetadata = () => {
+          resolve();
+        };
+      });
+    }
+
+    async function detectPose() {
+      const net = await posenet.load();
+      await setupCamera();
+      video.play();
+
+      function estimatePose() {
+        net.estimateSinglePose(video, {
+          flipHorizontal: false
+        }).then((pose) => {
+          drawPose(pose);
+          requestAnimationFrame(estimatePose);
+        });
+      }
+
+      function drawPose(pose) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (pose.keypoints) {
+          // Draw keypoints
+          pose.keypoints.forEach(point => {
+            if (point.score > 0.5) {
+              ctx.beginPath();
+              ctx.arc(point.position.x, point.position.y, 5, 0, 2 * Math.PI);
+              ctx.fillStyle = 'red';
+              ctx.fill();
+            }
+          });
+
+          // Draw skeleton lines
+          const adjacentKeyPoints = [
+            ['nose', 'leftEye'], ['nose', 'rightEye'], ['leftEye', 'leftEar'], ['rightEye', 'rightEar'],
+            ['leftShoulder', 'leftElbow'], ['leftElbow', 'leftWrist'], ['rightShoulder', 'rightElbow'],
+            ['rightElbow', 'rightWrist'], ['leftShoulder', 'rightShoulder'], ['leftHip', 'rightHip'],
+            ['leftShoulder', 'leftHip'], ['rightShoulder', 'rightHip'], ['leftHip', 'leftKnee'],
+            ['leftKnee', 'leftAnkle'], ['rightHip', 'rightKnee'], ['rightKnee', 'rightAnkle']
+          ];
+
+          adjacentKeyPoints.forEach(([partA, partB]) => {
+            const keypointA = pose.keypoints.find(kp => kp.part === partA);
+            const keypointB = pose.keypoints.find(kp => kp.part === partB);
+            if (keypointA && keypointB && keypointA.score > 0.5 && keypointB.score > 0.5) {
+              ctx.beginPath();
+              ctx.moveTo(keypointA.position.x, keypointA.position.y);
+              ctx.lineTo(keypointB.position.x, keypointB.position.y);
+              ctx.strokeStyle = 'blue';
+              ctx.lineWidth = 2;
+              ctx.stroke();
+            }
+          });
+        }
+      }
+
+      estimatePose();
+    }
+
+    detectPose();
+  </script>
+</body>
+</html>
