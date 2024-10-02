@@ -1,4 +1,4 @@
-# Lean-Canv
+# pose estimation
 
 README index.html
 För att testa video-trackern:
