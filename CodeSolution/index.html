@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TensorFlow.js PoseNet</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: black;
+        }
+        #webcam {
+            transform: scaleX(-1);
+            position: absolute;
+            width: 640px;
+            height: 480px;
+        }
+        #canvas {
+            position: absolute;
+            width: 640px;
+            height: 480px;
+        }
+        .controls {
+            margin-top: 550px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .controls button:hover {
+            background-color: #0056b3;
+        }
+        .measurements {
+            position: absolute;
+            margin-left: -950px;
+            display: flex;
+            justify-content: center;
+        }
+        /*
+        #speedDisplay {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+         */
+        #tug {
+            padding: 30px 40px;
+            font-size: 40px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<video id="webcam" autoplay playsinline width="640" height="480"></video>
+<canvas id="canvas" width="640" height="480"></canvas>
+
+<div class="measurements">
+    <div id="tug">TUG: none</div>
+    <!--<div id="speedDisplay">Speed:0 m/s</div>  Don't forget to add it in appSinglePose line:233-->
+</div>
+
+<div class="controls">
+    <button id="startButton">Start</button>
+    <button id="stopButton">Stop</button>
+</div>
+
+<script src="appSinglePose.js"></script>
+</body>
+</html>
+
