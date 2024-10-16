@@ -1,19 +1,16 @@
-% Load the first file (manual data)
+% Read the first file (manual)
 filename1 = 'manuell.txt';
-data1 = lasInData(filename1); % Uses helper function to read data from the file
+data1 = lasInData(filename1); % Uses helper function to read data
 
-% Load the second file (automatic data)
+% Read the second file (automatic)
 filename2 = 'auto.txt';
-data2 = lasInData(filename2); % Uses the same helper function to read the second file
+data2 = lasInData(filename2); % Uses the same helper function for the second file
 
 % Calculate the mean for each file
 mean_data1 = mean(data1, 1); % Mean of manual data
 mean_data2 = mean(data2, 1); % Mean of automatic data
 
-% Compute the difference between the average values for each time step
-mean_difference = mean_data2 - mean_data1;
-
-% Create a new figure to plot the averages from both files
+% Create a figure to plot the averages for both files
 figure;
 
 x_values = 0:6; % x-values (0 to 6 steps)
@@ -33,28 +30,48 @@ grid on;
 xlim([0, 6]);
 ylim([0, max([mean_data1, mean_data2]) + 1]);
 
-% Show the legend
+% Show legend
 legend('show');
 hold off;
 
-% Create a new figure to show the difference between the averages
+% Calculate differences between each TUG step for both manual and automatic data
+diff_data1 = diff(data1, 1, 2); % Differences between TUG steps for manual data
+diff_data2 = diff(data2, 1, 2); % Differences between TUG steps for automatic data
+
+% Calculate mean differences for each TUG step
+mean_diff_data1 = mean(diff_data1, 1); % Mean differences for manual data
+mean_diff_data2 = mean(diff_data2, 1); % Mean differences for automatic data
+
+% Calculate the difference between the average differences
+difference_from_manual = mean_diff_data2 - mean_diff_data1;
+
+% Calculate standard deviation for the differences
+std_diff_data2 = std(diff_data2, 0, 1); % Standard deviation for automatic data
+
+% Create a new figure to show difference with standard deviation
 figure;
 
-% Plot the difference in seconds between the average values
-plot(x_values, mean_difference, 'o-', 'DisplayName', 'Difference (Auto - Manual)', 'LineWidth', 1.5);
+x_values_diff = 1:6; % TUG steps from 1 to 6 (since diff eliminates the first column)
 
-% Format the graph for the difference
+% Plot mean value of differences with standard deviation without connecting lines
+hold on;
+errorbar(x_values_diff, difference_from_manual, std_diff_data2, 'o', 'DisplayName', 'Difference with Std. Deviation', 'LineWidth', 1.5);
+
+% Format the graph for standard deviation
 xlabel('TUG Steps');
-ylabel('Difference in Seconds (Auto - Manual)');
-title('Time Difference between Automatic and Manual Time Up and Go');
+ylabel('Time in Seconds');
+title('Difference and Standard Deviation between Automatic and Manual Time Up and Go');
 grid on;
-xlim([0, 6]);
-ylim([min(mean_difference) - 0.5, max(mean_difference) + 0.5]); % Adjust y-axis
+xlim([1, 6]);
+ylim([min(difference_from_manual) - 2, max(difference_from_manual) + 2]); % Adjust y-axis
 
-% Add text labels to the graph showing the difference values
-for j = 1:length(x_values)
-    text(x_values(j), mean_difference(j), sprintf('%.2f', mean_difference(j)), ...
-        'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'center', 'Color', 'k');
+% Add Y-values to the graph for each TUG step with red color
+for j = 1:length(x_values_diff)
+    % Print the Y-value in the graph
+    y_value = difference_from_manual(j);
+    text(x_values_diff(j), y_value, sprintf('%.2f', y_value), ...
+        'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'center', ...
+        'Color', 'r'); % Change to your desired color
 end
 
 % Show the legend
@@ -79,7 +96,6 @@ function data = lasInData(filename)
     for i = 1:nGraphs
         times = {rawData{1}{i}, rawData{2}{i}, rawData{3}{i}, rawData{4}{i}, rawData{5}{i}, rawData{6}{i}, rawData{7}{i}};
         time_values = duration(times, 'InputFormat', 'hh:mm:ss.SS');
-        data(i, :) = seconds(time_values)';
+        data(i, :) = seconds(time_values)'; % Convert to seconds
     end
 end
-
