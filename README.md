@@ -5,7 +5,7 @@ This work focuses on an automated system for assessing fall risk in the elderly 
 
 # Demo 
 
-[![Pose Estimation](https://img.youtube.com/vi/your_video_id/0.jpg)](https://youtu.be/phvvhDWnqBg)
+[![Pose Estimation](https://img.youtube.com/vi/phvvhDWnqBg/maxresdefault.jpg)](https://youtu.be/phvvhDWnqBg)
 
 
 
