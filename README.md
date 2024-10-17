@@ -5,8 +5,8 @@ This work focuses on an automated system for assessing fall risk in the elderly 
 
 # Demo 
 
-[![Pose Estimation](https://img.youtube.com/vi/phvvhDWnqBg/maxresdefault.jpg)](https://youtu.be/phvvhDWnqBg)
-video width="600" controls>
+
+<video width="600" controls>
   <source src="https://github.com/Annay02/pose-estimation/blob/main/CM2024_video_compressed.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
