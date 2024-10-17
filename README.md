@@ -4,7 +4,7 @@
 This work focuses on an automated system for assessing fall risk in the elderly using the Timed Up-and-Go (TUG) test. It utilizes a standard camera and 2D pose estimation to track key body points, providing an objective, cost-effective alternative for clinical mobility evaluation.
 
 # Demo 
-[![Pose Estimation]((https://youtu.be/phvvhDWnqBg))
+[![Pose estimation]((https://youtu.be/phvvhDWnqBg))
 
 
 # Installation
