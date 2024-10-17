@@ -1,4 +1,6 @@
-# pose estimation
+# Pose estimation
+
+Introduction 
 
 README index.html
 To test the video tracker:
