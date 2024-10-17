@@ -16,6 +16,12 @@ https://github.com/user-attachments/assets/44d4eda9-b596-4bf6-a427-a90add855622
 
 # Getting Started
 
+( README index.html
+To test the video tracker:
+1. In VSC install extension "Live Server"
+2. In VSC, navigate to the folder where index.html is located (the local location you chose on your computer for the repot, see the Github guide)
+3. Right-click index.html and select 'Open with Live Server' ) ? 
+
 
 # Graphs 
 Below is information on graph generation: 
@@ -32,9 +38,4 @@ Graph 2
 
 
 
-README index.html
-To test the video tracker:
-1. In VSC install extension "Live Server"
-2. In VSC, navigate to the folder where index.html is located (the local location you chose on your computer for the repot, see the Github guide)
-3. Right-click index.html and select 'Open with Live Server'
 
