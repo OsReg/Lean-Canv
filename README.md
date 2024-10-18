@@ -35,7 +35,10 @@ Graph 2
 ![Alt text](https://github.com/Annay02/pose-estimation/blob/main/Graphs/Standard%20Deviation%20.png)
 * The graph titled "Difference and Standard Deviation between Automatic and Manual Time Up and Go" shows time differences between automatic and manual Time Up and Go (TUG) measurements for steps 1–6. Each point represents the average difference per step, with error bars showing standard deviation. Positive values mean the automatic method took longer; negative values mean it was faster.
 
+Graph 3 
 
+![Alt text](https://github.com/Annay02/pose-estimation/blob/main/Graphs/download-1.jpg) 
+* This graph illustrates a potential execution of a TUG (Timed Up and Go) test. Once the test is completed, a file is generated. This file can be imported into software such as MATLAB, where a graph can be produced showing the measured time for each movement.
 
 
 
