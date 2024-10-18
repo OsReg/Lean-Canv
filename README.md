@@ -37,7 +37,7 @@ Graph 2
 
 Graph 3 
 
-![Alt text](https://github.com/Annay02/pose-estimation/blob/main/Graphs/download-1.jpg) 
+![Alt text](https://github.com/Annay02/pose-estimation/blob/main/Graphs/TUG.jpeg)
 * This graph illustrates a potential execution of a TUG (Timed Up and Go) test. Once the test is completed, a file is generated. This file can be imported into software such as MATLAB, where a graph can be produced showing the measured time for each movement.
 
 
