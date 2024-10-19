@@ -12,11 +12,50 @@ https://github.com/user-attachments/assets/44d4eda9-b596-4bf6-a427-a90add855622
 
 
 # Installation
+This project implements real-time pose estimation using TensorFlow and a skeleton tracking model. The application can track human movements and identify key body joints in real-time.
 
+To run the pose estimation code using TensorFlow.js, follow these steps:
+
+1. Clone the Repository: 
+   First, clone the code from your GitHub repository. Open your terminal and run the following command:
+   ```bash
+   git clone https://github.com/Annay02/pose-estimation.git
+   ```
+   Navigate to the cloned directory:
+   ```bash
+   cd pose-estimation/CodeSolution
+   ```
+
+2. Install Node.js:
+   Ensure that you have Node.js installed on your system. You can download and install it from [Node.js official website](https://nodejs.org/).
+
+3. Install Dependencies:
+   Inside the `CodeSolution` directory, install the necessary dependencies by running:
+   ```bash
+   npm install
+   ```
+
+4. Run the Application:
+   Start the local server with the following command:
+   ```bash
+   npm start
+   ```
+   This will host the application, typically accessible at `http://localhost:3000`.
+
+5. Accessing the Pose Estimation:
+   Open your web browser and go to the URL provided in your terminal (usually `http://localhost:3000`) to interact with your pose estimation application.
+
+By following these steps, you will have the pose estimation code set up and ready to use with TensorFlow.js.
 
 # Getting Started
+When the web application is running:
 
-( README index.html
+1. Ensure your webcam is active and has the necessary permissions.
+2. Press the "Start" button to initiate pose detection and begin the TUG test.
+3. Follow the on-screen instructions to complete the test. The results will be displayed in real-time.
+4. After completing the TUG test, all keypoint positions and timestamps for each activity will be saved. You can download the results in CSV format for further analysis.
+
+? ( README index.html
 To test the video tracker:
 1. In VSC install extension "Live Server"
 2. In VSC, navigate to the folder where index.html is located (the local location you chose on your computer for the repot, see the Github guide)
